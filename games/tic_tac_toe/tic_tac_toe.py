@@ -50,50 +50,90 @@ def render_line(size: int) -> str:
 
 def parse_move(row: str, column: str, board: Board) -> int | None:
     if not row.strip().isdigit():
+        print(f"Invalid row value: '{row}'")
         return None
     row = int(row)
-    if row not in range(1, board.size):
+    if row not in range(1, board.size + 1):
+        print(f"Row '{row}' not inside board: 1 - {board.size}")
         return None
     if not column.strip().isdigit():
+        print(f"Invalid column value: '{column}'")
         return None
     column = int(column)
-    if column not in range(1, board.size):
+    if column not in range(1, board.size + 1):
+        print(f"Column '{column}' not inside board: 1 - {board.size}")
         return None
-    index = row - 1 + column - 1
+    index = (row - 1) * board.size + (column - 1)
     if not board.tiles[index] == TILE.EMPTY:
+        print(f"Chosen tile is already: {board.tiles[index].value}")
         return None
     return index
 
 
-def winner(board: list[str]) -> str | None:
-    """Return "X" or "O" if that player has three in a row, otherwise None."""
-    pass
+def winner(board: Board) -> TILE | None:
+    #check columns
+    for col in range(0, board.size):
+        if (tile := line_is_winner(board.tiles[col::board.size])): 
+            return tile
+    #check rows
+    for row in range(0, board.size):
+        if (tile := line_is_winner(board.tiles[row * board.size:(row + 1) * board.size])):
+            return tile
+    #check diagonal (top-left to bottom-right)
+    if (tile := line_is_winner(board.tiles[0::board.size + 1])):
+        return tile
+    #check diagonal (top-right to bottom-left)
+    if (tile := line_is_winner(board.tiles[board.size - 1:-1:board.size - 1])):
+        return tile
 
+def is_full(board: Board) -> bool:
+    return all(tile != TILE.EMPTY for tile in board.tiles)
 
-def is_draw(board: list[str]) -> bool:
-    """Return True if the board is full and nobody has won."""
-    pass
-
+def line_is_winner(line: list[TILE]) -> TILE | None:
+    if(all(tile == line[0] for tile in line) and line[0] != TILE.EMPTY):
+        return line[0]
 
 def main() -> None:
-    while(True):       
-        board = new_board()
+    first = TILE.X
+    while(True):
+        first = start_new_game(first)
+        while(True):
+            again = input(f"Play again? (y/n): ")
+            if ("y" in again.lower()):
+                break
+            elif ("n" in again.lower()):
+                print("Goodbye! :-)")
+                return
+
+def start_new_game(first_turn: TILE = TILE.X) -> TILE:
+    print(f"Starting game...\n\n")
+    current_player = first_turn
+    board = new_board()
+
+    while(True):
         print(render(board=board))
-        current_player = TILE.X
 
         while(True):
             row = input(f"Player {current_player.value}, choose a row (1 - {board.size}): ")
             column = input(f"Player {current_player.value}, choose a column (1 - {board.size}): ")
-            index = parse_move(row, column, board)
-            if index is not None:
-                board.tiles[index] = current_player.value
+            valid_tile_index = parse_move(row, column, board)
+            if valid_tile_index is not None:
+                board.tiles[valid_tile_index] = current_player
+                break
 
-        if current_player is TILE.X:
-            current_player = TILE.O
-        else:
-            current_player = TILE.X
-
+        if (winning_player := winner(board)):
+            print(render(board=board))
+            print(f"Winner is '{winning_player.value}'!")
+            return TILE.O if winning_player is TILE.X else TILE.X
         
+        current_player = TILE.O if current_player is TILE.X else TILE.X
+        
+        if is_full(board):
+            print(render(board=board))
+            print("DRAW")
+            return current_player
+
+
 
         
 
