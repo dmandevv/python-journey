@@ -10,7 +10,9 @@
 
 **Level check so far:** Two Sum was solved quickly by brute force, with clean code and correct edge cases. The single-pass version using a dictionary was new and was shown with an explanation. **Next challenges should mix in common patterns** (hash map, two pointers, sliding window), explained when they first come up.
 
-**⏭️ Next session:** warm-up challenge 004 (next pattern: **sliding window**), then start **Pong** (`games/pong/`). That means installing `pygame` into `.venv` and adding it to `requirements.txt`, then learning the game loop (events → update → draw, at a fixed frame rate).
+**⏭️ Next session:** warm-up challenge 005, then carry on with **Pong** (`games/pong/`): **add the ball** next. It has an x and y speed and bounces off the top and bottom walls (flip `vy` *and* move it out of the wall, or it sticks). Touching the left or right wall scores a point for the other player and resets the ball to the centre. Then it bounces off the paddles (`colliderect`).
+
+**Pong so far:** a `Paddle` sprite in `paddle.py` with an `FRect`, `dt`-based speed and its own up/down keys; four wall rects just outside the screen; the left paddle is stopped by the top and bottom walls (collision detection *and* response). **Not done yet:** the second paddle (`K_UP`/`K_DOWN`, at `x = WIDTH - …`); the wall response lives in `main` for `paddle1` only, so move it into `Paddle.update` or use `clamp_ip(screen.get_rect())`; unused `import sys` and `in_bounds` in `paddle.py`; paddles placed by their top-left corner, not their centre.
 
 **Optional polish on tic-tac-toe** (it works, so none of this blocks anything): `again.isalpha` is missing `()`, so it's always true; `"y" in again` also matches "no way"; use `return` instead of `exit(0)` in `main`; the docstring at the top still describes the old keypad and list design.
 
@@ -20,8 +22,8 @@
 
 | Track | Done | Current |
 |---|---|---|
-| Challenges | 3 | 001 Two Sum ✅ · 002 Valid Palindrome ✅ (two-pointer version fixed by Claude) · 003 Reverse In Place ✅ |
-| Games | 1 | tic-tac-toe ✅ · next: **Pong** (needs `pygame`) |
+| Challenges | 4 | 001 Two Sum ✅ · 002 Valid Palindrome ✅ (two-pointer version fixed by Claude) · 003 Reverse In Place ✅ · 004 Max Sum Window ✅ |
+| Games | 1 | tic-tac-toe ✅ · **Pong** in progress (paddles done, ball next) |
 | Scripts | 0 | none yet |
 
 ## Ideas backlog
@@ -32,6 +34,13 @@
 ---
 
 ## Daily log
+
+### 2026-10-07
+- **Challenge 004 Max Sum of k Consecutive ✅**: both versions written by you, 14 tests. The sliding window starts from the first window's sum, then each step adds `nums[i+k-1]` and subtracts `nums[i-1]`
+  - Learned: `:=` binds more loosely than `>`, so write `(s := sum(w)) > best`; `a if c else b` always needs an `else`, so use `max(a, b)` instead; starting the sliding window with the first window's sum also handles the all-negative case
+- **Pong started**: installed `pygame-ce` 2.5.8 (the actively maintained fork; still `import pygame`) into `.venv` and added it to `requirements.txt`. `games/pong/pong.py` has the bare game loop: events → update → draw at 60 FPS. WSLg provides the display
+- **Pong: paddles move and stop at the walls.** You built a `Paddle` sprite class and a sprite group, and use `dt` so speeds are in pixels per second
+  - Learned: `Rect` stores whole numbers only, so small `dt` moves round away (up worked, down didn't); `FRect` keeps the fractions. Collision **detection** (`collidelist`) and collision **response** (moving the object back out) are separate steps. pygame's y axis points down
 
 ### 2026-10-06
 - **Challenge 003 Reverse a List In Place ✅**: two pointers, written from scratch with no help, and correct first time. That's the pattern from 002 learned
