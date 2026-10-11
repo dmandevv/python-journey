@@ -10,9 +10,13 @@
 
 **Level check so far:** Two Sum was solved quickly by brute force, with clean code and correct edge cases. The single-pass version using a dictionary was new and was shown with an explanation. **Next challenges should mix in common patterns** (hash map, two pointers, sliding window), explained when they first come up.
 
-**⏭️ Next session:** warm-up challenge 005, then carry on with **Pong** (`games/pong/`): **add the ball** next. It has an x and y speed and bounces off the top and bottom walls (flip `vy` *and* move it out of the wall, or it sticks). Touching the left or right wall scores a point for the other player and resets the ball to the centre. Then it bounces off the paddles (`colliderect`).
+**⏭️ Next session:** warm-up challenge 006, then pick the next project. Either the first **script** (that track hasn't started; see the ideas backlog) or the next game. A script would round out the repo for employers.
 
-**Pong so far:** a `Paddle` sprite in `paddle.py` with an `FRect`, `dt`-based speed and its own up/down keys; four wall rects just outside the screen; the left paddle is stopped by the top and bottom walls (collision detection *and* response). **Not done yet:** the second paddle (`K_UP`/`K_DOWN`, at `x = WIDTH - …`); the wall response lives in `main` for `paddle1` only, so move it into `Paddle.update` or use `clamp_ip(screen.get_rect())`; unused `import sys` and `in_bounds` in `paddle.py`; paddles placed by their top-left corner, not their centre.
+**Optional polish on Pong** (it works, so none of this blocks anything):
+- The wall check for the paddles is copied once per paddle in `main`; `clamp_ip(bounds)` in `Paddle.update` replaces both copies
+- `Paddle.get_direction()` is missing `self` (it only matters if the base version is ever called)
+- `ComputerPaddle` compares top edges with no dead zone, so it shakes and can't be beaten. Compare centres, add a dead zone, or give it a slower speed
+- Unused `import sys` and `in_bounds`; paddles are placed by their top-left corner (use `get_frect(center=(x, y))`)
 
 **Optional polish on tic-tac-toe** (it works, so none of this blocks anything): `again.isalpha` is missing `()`, so it's always true; `"y" in again` also matches "no way"; use `return` instead of `exit(0)` in `main`; the docstring at the top still describes the old keypad and list design.
 
@@ -22,8 +26,8 @@
 
 | Track | Done | Current |
 |---|---|---|
-| Challenges | 4 | 001 Two Sum ✅ · 002 Valid Palindrome ✅ (two-pointer version fixed by Claude) · 003 Reverse In Place ✅ · 004 Max Sum Window ✅ |
-| Games | 1 | tic-tac-toe ✅ · **Pong** in progress (paddles done, ball next) |
+| Challenges | 5 | 001 Two Sum ✅ · 002 Valid Palindrome ✅ (two-pointer version fixed by Claude) · 003 Reverse In Place ✅ · 004 Max Sum Window ✅ · 005 Valid Parentheses ✅ |
+| Games | 2 | tic-tac-toe ✅ · Pong ✅ |
 | Scripts | 0 | none yet |
 
 ## Ideas backlog
@@ -34,6 +38,17 @@
 ---
 
 ## Daily log
+
+### 2026-10-10
+- **Challenge 005 Valid Parentheses ✅** (stack), 14 tests, rated 8/10: correct and O(n), and it handles both edge cases (closing with nothing open, left unclosed). **Design call (yours): spaces are ignored**, with tests for `"()  []"` and `"  "`. Remaining nit: any other non-bracket character is pushed as if it were an opening bracket
+  - Learned: a list as a stack (`append`, `pop`, `[-1]`); `is None` rather than `== None`; `not stack` for "empty"; when a test fails, decide whether the **code or the rule** is wrong before changing either
+- **Pong ✅ done**: scoring (left wall → player 2, right wall → player 1), the score drawn with `font.render` and `blit`, a 2-second serve pause, the ball pushed out after every bounce, and the speed reset each point. **Your own addition:** random acceleration (`random.uniform`) so rallies speed up unpredictably
+  - Bugs found on the way: `score_pause_timer = …` without `self.` made a local variable, so the pause never started; `rect.center = x` then `= y` crashes with `TypeError` (it takes a pair: `(x, y)`). Verified: `reset()` now runs cleanly and all 89 tests pass
+  - Learned: `max(0, t - dt)` to clamp a value; an early `return` instead of nesting in `else`; text in pygame is render-then-blit
+
+### 2026-10-08
+- **Pong: the ball and the paddle classes.** `Ball` with a `Vector2` velocity; it bounces off the walls and both paddles. `Paddle` split into `PlayerPaddle` and `ComputerPaddle` (your idea), where only `get_direction()` differs
+  - Learned: `or` returns the first **truthy** value, and `-1` is truthy while `0` isn't, so `collidelist(a) or collidelist(b)` skipped the second check and missed the top wall. Use `colliderect` for single objects. Also learned the template-method pattern and `super().__init__()`, and that `keys[down] - keys[up]` gives -1, 0 or 1
 
 ### 2026-10-07
 - **Challenge 004 Max Sum of k Consecutive ✅**: both versions written by you, 14 tests. The sliding window starts from the first window's sum, then each step adds `nums[i+k-1]` and subtracts `nums[i-1]`
