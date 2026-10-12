@@ -10,7 +10,7 @@
 
 **Level check so far:** Two Sum was solved quickly by brute force, with clean code and correct edge cases. The single-pass version using a dictionary was new and was shown with an explanation. **Next challenges should mix in common patterns** (hash map, two pointers, sliding window), explained when they first come up.
 
-**⏭️ Next session:** warm-up challenge 006, then pick the next project. Either the first **script** (that track hasn't started; see the ideas backlog) or the next game. A script would round out the repo for employers.
+**⏭️ Next session:** warm-up challenge 007, then carry on with the **organiser script** (`scripts/organize_folder/`): all 5 functions are still stubs, 1 of 18 tests passes. Suggested order: `category_for` → `unique_destination` → `plan_moves` → `apply_moves` → `main` (`argparse` is new). Try it on a throwaway folder with `--dry-run` before any real one.
 
 **Optional polish on Pong** (it works, so none of this blocks anything):
 - The wall check for the paddles is copied once per paddle in `main`; `clamp_ip(bounds)` in `Paddle.update` replaces both copies
@@ -26,9 +26,9 @@
 
 | Track | Done | Current |
 |---|---|---|
-| Challenges | 5 | 001 Two Sum ✅ · 002 Valid Palindrome ✅ (two-pointer version fixed by Claude) · 003 Reverse In Place ✅ · 004 Max Sum Window ✅ · 005 Valid Parentheses ✅ |
+| Challenges | 6 | 001 Two Sum ✅ · 002 Valid Palindrome ✅ (two-pointer version fixed by Claude) · 003 Reverse In Place ✅ · 004 Max Sum Window ✅ · 005 Valid Parentheses ✅ · 006 Binary Search ✅ |
 | Games | 2 | tic-tac-toe ✅ · Pong ✅ |
-| Scripts | 0 | none yet |
+| Scripts | 0 | **organize_folder** in progress (sort a folder into subfolders by type) |
 
 ## Ideas backlog
 
@@ -38,6 +38,10 @@
 ---
 
 ## Daily log
+
+### 2026-10-12
+- **Challenge 006 Binary Search ✅**, 11 tests including a million-item list. Written by you and right first time: `low <= high`, and both boundaries move past `mid`, so the two-item case can't loop
+- **First script started: `scripts/organize_folder/`.** Claude wrote stubs and 18 tests: `category_for`, `unique_destination`, `plan_moves`, `apply_moves`, and `main` with `argparse` and `--dry-run`. All tests run in pytest's `tmp_path`, so they never touch real files
 
 ### 2026-10-10
 - **Challenge 005 Valid Parentheses ✅** (stack), 14 tests, rated 8/10: correct and O(n), and it handles both edge cases (closing with nothing open, left unclosed). **Design call (yours): spaces are ignored**, with tests for `"()  []"` and `"  "`. Remaining nit: any other non-bracket character is pushed as if it were an opening bracket
