@@ -10,7 +10,7 @@
 
 **Level check so far:** Two Sum was solved quickly by brute force, with clean code and correct edge cases. The single-pass version using a dictionary was new and was shown with an explanation. **Next challenges should mix in common patterns** (hash map, two pointers, sliding window), explained when they first come up.
 
-**⏭️ Next session:** warm-up challenge 007, then carry on with the **organiser script** (`scripts/organize_folder/`): all 5 functions are still stubs, 1 of 18 tests passes. Suggested order: `category_for` → `unique_destination` → `plan_moves` → `apply_moves` → `main` (`argparse` is new). Try it on a throwaway folder with `--dry-run` before any real one.
+**⏭️ Next session:** the **organiser script works** (19/19 tests). Optional polish: a friendly error for a folder that doesn't exist (`parser.error`), fill in the empty `description=""`, say "Nothing to move" when the plan is empty, and add the short `README.md` the layout calls for. Try it on a real folder with `--dry-run` first. Then pick the next project from the backlog.
 
 **Optional polish on Pong** (it works, so none of this blocks anything):
 - The wall check for the paddles is copied once per paddle in `main`; `clamp_ip(bounds)` in `Paddle.update` replaces both copies
@@ -28,7 +28,7 @@
 |---|---|---|
 | Challenges | 7 | 001 Two Sum ✅ · 002 Valid Palindrome ✅ (two-pointer version fixed by Claude) · 003 Reverse In Place ✅ · 004 Max Sum Window ✅ · 005 Valid Parentheses ✅ · 006 Binary Search ✅ · 007 Valid Anagram ✅ |
 | Games | 2 | tic-tac-toe ✅ · Pong ✅ |
-| Scripts | 0 | **organize_folder** in progress (sort a folder into subfolders by type) |
+| Scripts | 1 | organize_folder ✅ |
 
 ## Ideas backlog
 
@@ -43,6 +43,9 @@
 - **Challenge 007 Valid Anagram ✅**: three versions, all yours (`sorted`, a hand-built count dictionary, `Counter`), each run against 10 cases (30 tests)
   - Learned: counting with `d.get(k, 0) + 1`; `collections.Counter`; **`a = b = {}` makes one dictionary with two names**, not two (it made every pair count as an anagram until it was split)
   - VS Code: IntelliSense stopped because the Python extensions weren't running in the window (no Pylance activity in the logs). Fix: enable them for WSL, re-select `.venv`, reload the window. Also remove the stale `python.pythonPath: /usr/bin/python` user setting, which points at a file that doesn't exist
+- **Organiser script ✅ works end to end**, 19/19 tests, all five functions yours. Tried on a scratch folder: dry run, real run, and a second run on the already-sorted folder all behave
+  - Bugs found on the way: the first `exists()` check skipped the planned-names check, so two files could be planned onto one name; marking a name as taken *before* asking `unique_destination` made every file get `(1)`; `max()` crashed on an empty plan
+  - Learned: plan first, then act (that's what makes `--dry-run` possible); a `set` of names already handed out; sort *before* planning, because `iterdir()` has no fixed order; **a mutable default (`=[]`) is created once and shared by every call**, so use `()`; a generator needs its own brackets when it isn't the only argument; `max(..., default=0)`; `argparse` (positional arguments, `store_true` flags, `--dry-run` becomes `args.dry_run`, `type=Path`)
 
 ### 2026-10-12
 - **Challenge 006 Binary Search ✅**, 11 tests including a million-item list. Written by you and right first time: `low <= high`, and both boundaries move past `mid`, so the two-item case can't loop
