@@ -18,10 +18,3 @@ games/        <game>/               (one folder per game)
 scripts/      <script>/             (one folder per script, with a short README)
 progress.md   current position and daily log
 ```
-
-## How a session runs
-
-Each session is two hours and starts by reading `progress.md`.
-1. **Warm-up (~15 min):** one challenge.
-2. **Main work (~100 min):** the current game or script.
-3. **Log (~5 min):** update `progress.md` with what was done, what was learned and where the next session starts.

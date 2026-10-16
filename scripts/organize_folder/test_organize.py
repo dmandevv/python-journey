@@ -73,6 +73,15 @@ def test_plan_moves_never_overwrites(tmp_path):
     ]
 
 
+def test_plan_moves_never_plans_two_files_onto_one_name(tmp_path):
+    # Images/a.png exists, so a.png is planned as "a (1).png". But "a (1).png"
+    # is also waiting to move, and must not be planned onto that same name.
+    (tmp_path / "Images").mkdir()
+    make_files(tmp_path, "Images/a.png", "a.png", "a (1).png")
+    destinations = [dest for _, dest in plan_moves(tmp_path)]
+    assert len(destinations) == len(set(destinations)) == 2
+
+
 def test_plan_moves_on_an_empty_folder(tmp_path):
     assert plan_moves(tmp_path) == []
 

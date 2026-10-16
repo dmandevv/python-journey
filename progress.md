@@ -26,7 +26,7 @@
 
 | Track | Done | Current |
 |---|---|---|
-| Challenges | 6 | 001 Two Sum ✅ · 002 Valid Palindrome ✅ (two-pointer version fixed by Claude) · 003 Reverse In Place ✅ · 004 Max Sum Window ✅ · 005 Valid Parentheses ✅ · 006 Binary Search ✅ |
+| Challenges | 7 | 001 Two Sum ✅ · 002 Valid Palindrome ✅ (two-pointer version fixed by Claude) · 003 Reverse In Place ✅ · 004 Max Sum Window ✅ · 005 Valid Parentheses ✅ · 006 Binary Search ✅ · 007 Valid Anagram ✅ |
 | Games | 2 | tic-tac-toe ✅ · Pong ✅ |
 | Scripts | 0 | **organize_folder** in progress (sort a folder into subfolders by type) |
 
@@ -38,6 +38,11 @@
 ---
 
 ## Daily log
+
+### 2026-10-15
+- **Challenge 007 Valid Anagram ✅**: three versions, all yours (`sorted`, a hand-built count dictionary, `Counter`), each run against 10 cases (30 tests)
+  - Learned: counting with `d.get(k, 0) + 1`; `collections.Counter`; **`a = b = {}` makes one dictionary with two names**, not two (it made every pair count as an anagram until it was split)
+  - VS Code: IntelliSense stopped because the Python extensions weren't running in the window (no Pylance activity in the logs). Fix: enable them for WSL, re-select `.venv`, reload the window. Also remove the stale `python.pythonPath: /usr/bin/python` user setting, which points at a file that doesn't exist
 
 ### 2026-10-12
 - **Challenge 006 Binary Search ✅**, 11 tests including a million-item list. Written by you and right first time: `low <= high`, and both boundaries move past `mid`, so the two-item case can't loop

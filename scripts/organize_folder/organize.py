@@ -31,19 +31,22 @@ OTHER = "Other"
 
 
 def category_for(path: Path) -> str:
-    """
-    Return the category folder name for a file, based on its extension.
-    Upper or lower case doesn't matter. Unknown or missing extensions -> OTHER.
-    """
-    pass
+    for cat in CATEGORIES.items():
+        if (path.suffix.lower() in cat[1]):
+            return cat[0]
+    return OTHER
 
 
 def unique_destination(destination: Path) -> Path:
-    """
-    Return `destination` if nothing exists there yet. Otherwise return the
-    first free name of the form "name (1).ext", "name (2).ext", ...
-    """
-    pass
+    if destination.exists() == False:
+        return destination
+    counter = 0
+    while(True):
+        counter += 1
+        file_name = f"{destination.stem} ({counter}){destination.suffix}"
+        file_path = destination.parent / file_name
+        if file_path.exists() == False:
+            return file_path
 
 
 def plan_moves(folder: Path) -> list[tuple[Path, Path]]:
