@@ -84,8 +84,11 @@ def apply_moves(moves: list[tuple[Path, Path]], dry_run: bool) -> None:
     Print each move. Unless `dry_run` is set, also create the category folder
     if needed and move the file.
     """
+    if not moves:
+        print("No files to move")
+        return
     print("Moving files...")
-    max_src_len = max((len(src.as_posix()) for src, _ in moves), default=0)
+    max_src_len = max((len(src.as_posix()) for src, _ in moves))
     for src, dst in moves:
         print(f"{src.as_posix().ljust(max_src_len)} -> {dst.as_posix()}")
     if dry_run:
@@ -102,11 +105,13 @@ def main(argv: list[str] | None = None) -> None:
     then plan and apply the moves. `argv` lets tests pass arguments directly;
     None means "use the real command line".
     """
-    parser = argparse.ArgumentParser(description="")
+    parser = argparse.ArgumentParser(description="Sort the files in a folder into subfolders by type.")
     parser.add_argument("folder", type=Path, help="Folder to look in")
     parser.add_argument("--dry-run", action="store_true", help="Only prints proposed moves (use this to double check first!)")
 
     args = parser.parse_args(argv)
+    if not args.folder.is_dir():
+        parser.error("Folder doesn't exist or is a file.")
     planned_moves = plan_moves(args.folder)
     apply_moves(planned_moves, args.dry_run)
 

@@ -10,7 +10,7 @@
 
 **Level check so far:** Two Sum was solved quickly by brute force, with clean code and correct edge cases. The single-pass version using a dictionary was new and was shown with an explanation. **Next challenges should mix in common patterns** (hash map, two pointers, sliding window), explained when they first come up.
 
-**⏭️ Next session:** the **organiser script works** (19/19 tests). Optional polish: a friendly error for a folder that doesn't exist (`parser.error`), fill in the empty `description=""`, say "Nothing to move" when the plan is empty, and add the short `README.md` the layout calls for. Try it on a real folder with `--dry-run` first. Then pick the next project from the backlog.
+**⏭️ Next session:** the organiser is finished and polished. **Pick the next project** from the backlog (Snake reuses Pong's pygame setup; or another script).
 
 **Optional polish on Pong** (it works, so none of this blocks anything):
 - The wall check for the paddles is copied once per paddle in `main`; `clamp_ip(bounds)` in `Paddle.update` replaces both copies
@@ -26,7 +26,7 @@
 
 | Track | Done | Current |
 |---|---|---|
-| Challenges | 7 | 001 Two Sum ✅ · 002 Valid Palindrome ✅ (two-pointer version fixed by Claude) · 003 Reverse In Place ✅ · 004 Max Sum Window ✅ · 005 Valid Parentheses ✅ · 006 Binary Search ✅ · 007 Valid Anagram ✅ |
+| Challenges | 8 | 001 Two Sum ✅ · 002 Valid Palindrome ✅ (two-pointer version fixed by Claude) · 003 Reverse In Place ✅ · 004 Max Sum Window ✅ · 005 Valid Parentheses ✅ · 006 Binary Search ✅ · 007 Valid Anagram ✅ · 008 Buy and Sell Stock ✅ (one-pass version finished by Claude on request) |
 | Games | 2 | tic-tac-toe ✅ · Pong ✅ |
 | Scripts | 1 | organize_folder ✅ |
 
@@ -38,6 +38,12 @@
 ---
 
 ## Daily log
+
+### 2026-10-16
+- **Challenge 008 Best Time to Buy and Sell Stock ✅**, 20 tests. Brute force (every buy day × every later sell day) is yours. In the one-pass version you wrote the best-profit check; Claude added the new-low update and the `return` on request
+  - Learned: **keep "best so far" in its own variable** so that changing something else can't lose it. Tracking one buy/sell *pair* made it look as if you had to see the future; tracking "lowest price so far" and "best profit so far" separately needs only the past. A lower buy price is never worse, so it can always be taken
+- **Organiser polished**: a friendly `parser.error` for a missing folder or a file (exit code 2), a `--help` description, "No files to move" for an empty plan, and a `README.md`
+  - Learned: removing `max(...)` left a bare **generator** (a recipe for values, not a value), so `ljust` raised `TypeError`
 
 ### 2026-10-15
 - **Challenge 007 Valid Anagram ✅**: three versions, all yours (`sorted`, a hand-built count dictionary, `Counter`), each run against 10 cases (30 tests)
