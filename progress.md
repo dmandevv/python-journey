@@ -10,7 +10,7 @@
 
 **Level check so far:** Two Sum was solved quickly by brute force, with clean code and correct edge cases. The single-pass version using a dictionary was new and was shown with an explanation. **Next challenges should mix in common patterns** (hash map, two pointers, sliding window), explained when they first come up.
 
-**⏭️ Next session:** the organiser is finished and polished. **Pick the next project** from the backlog (Snake reuses Pong's pygame setup; or another script).
+**⏭️ Next session:** Hangman is playable, 27/27. Small fixes left in `main`: `"n" in play_again` misses `"N"` (it starts a new game) and matches any answer with an n in it; `sys.exit(0)` → `return`. Then pick the next project from the backlog.
 
 **Optional polish on Pong** (it works, so none of this blocks anything):
 - The wall check for the paddles is copied once per paddle in `main`; `clamp_ip(bounds)` in `Paddle.update` replaces both copies
@@ -26,8 +26,8 @@
 
 | Track | Done | Current |
 |---|---|---|
-| Challenges | 8 | 001 Two Sum ✅ · 002 Valid Palindrome ✅ (two-pointer version fixed by Claude) · 003 Reverse In Place ✅ · 004 Max Sum Window ✅ · 005 Valid Parentheses ✅ · 006 Binary Search ✅ · 007 Valid Anagram ✅ · 008 Buy and Sell Stock ✅ (one-pass version finished by Claude on request) |
-| Games | 2 | tic-tac-toe ✅ · Pong ✅ |
+| Challenges | 10 | 001 Two Sum ✅ · 002 Valid Palindrome ✅ (two-pointer version fixed by Claude) · 003 Reverse In Place ✅ · 004 Max Sum Window ✅ · 005 Valid Parentheses ✅ · 006 Binary Search ✅ · 007 Valid Anagram ✅ · 008 Buy and Sell Stock ✅ (one-pass version finished by Claude on request) · 009 Group Anagrams ✅ · 010 Longest Unique Substring ✅ |
+| Games | 2 | tic-tac-toe ✅ · Pong ✅ · **Hangman** playable (27/27), small fixes left |
 | Scripts | 1 | organize_folder ✅ |
 
 ## Ideas backlog
@@ -38,6 +38,20 @@
 ---
 
 ## Daily log
+
+### 2026-10-26
+- **Challenge 010 Longest Substring Without Repeating Characters ✅**, 24 tests (12 cases × 2 versions), both versions yours. Claude found the bugs; you made the fixes. Both versions also agree with a reference on every string up to 5 letters
+  - Brute force bugs: `current` was made once above both loops, so letters left over from one starting point carried into the next; a repeat reset the set and kept scanning instead of `break`. Claude's first 11 cases missed this, so `"aabbc"` was added
+  - One pass: **a window that grows and shrinks**. `right` moves every step and `left` only moves forward to fix a repeat, so it's O(n) even with a loop inside a loop. Two off-by-ones: with an exclusive end (`s[left:right]`), loop while `right < len(s)` and start at `right = 0` (an empty window)
+  - Learned: **the set has to match the window**. With `right = 1`, the first letter was in the slice but never `add`ed, so `remove` raised `KeyError`. Checking `in window` (a set) is instant; `in s[left:right]` scans the slice. `right - left` measures the window without building a new string
+- **Hangman playable, 27/27 tests, every function yours.** `load_words` and `masked` were already written at the start of the session; today you wrote `wrong_guesses`, `is_solved`, `parse_guess` and `main`. Played by script to a win and to a loss
+  - **Your own design:** `main` shuffles the word list and works through it, so no word repeats until all 60 have been played, then it reshuffles. Input is checked with `while (guess := parse_guess(...)) is None`
+  - Learned: **set operators**: `a - b` (in a, not in b; the order matters, `set(word) - guessed` is the letters still to find), `a <= b` (subset). `x in "string"` checks for a piece of the text and needs a string on the left. **`{}` is an empty dictionary**, so `set() == {}` is `False`; use `set()` or `not s`. **`isalpha` without `()` is always truthy** (the second time, after tic-tac-toe). Return `None` and print the reason, rather than returning the message, so the caller can't take an error for a guess
+
+### 2026-10-25
+- **Challenge 009 Group Anagrams ✅**, 9 tests, yours: a dictionary keyed by the sorted letters (`"".join(sorted(word))`), one pass, three lines
+  - Learned: `groups[key].append(x)` raises `KeyError` the first time a key is seen; `setdefault(key, [])` adds the empty list and returns it. `.items()` gives (key, value) pairs, `.values()` just the values. A list can't be a dictionary key, a string can. Keep the original word, not the cleaned one
+- **Hangman started (your pick)**: `games/hangman/`. Claude wrote the empty functions, 27 tests, a 60-word `words.txt` and the 7 gallows drawings. The guesses are kept in a `set`
 
 ### 2026-10-16
 - **Challenge 008 Best Time to Buy and Sell Stock ✅**, 20 tests. Brute force (every buy day × every later sell day) is yours. In the one-pass version you wrote the best-profit check; Claude added the new-low update and the `return` on request
